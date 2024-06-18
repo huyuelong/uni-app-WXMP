@@ -83,7 +83,7 @@ devDependencies:
     specifier: 3.0.0-alpha-3081220230802001
     version: 3.0.0-alpha-3081220230802001(postcss@8.4.28)(vite@4.4.9)(vue@3.3.4)
   '@rushstack/eslint-patch':
-    specifier: ^1.1.4
+    specifier: ^1.2.0
     version: 1.2.0
   '@types/node':
     specifier: ^18.11.9
@@ -98,7 +98,7 @@ devDependencies:
     specifier: ^7.0.0
     version: 7.0.0(eslint@8.28.0)(prettier@2.8.0)
   '@vue/eslint-config-typescript':
-    specifier: ^11.0.0
+    specifier: ^11.0.2
     version: 11.0.2(eslint-plugin-vue@9.8.0)(eslint@8.28.0)(typescript@5.1.6)
   '@vue/runtime-core':
     specifier: ^3.2.45
@@ -107,10 +107,10 @@ devDependencies:
     specifier: ^0.4.0
     version: 0.4.0
   eslint:
-    specifier: ^8.22.0
+    specifier: ^8.28.0
     version: 8.28.0
   eslint-plugin-vue:
-    specifier: ^9.3.0
+    specifier: ^9.8.0
     version: 9.8.0(eslint@8.28.0)
   husky:
     specifier: ^8.0.0
@@ -122,7 +122,7 @@ devDependencies:
     specifier: ^3.12.0
     version: 3.12.2
   prettier:
-    specifier: ^2.7.1
+    specifier: ^2.8.0
     version: 2.8.0
   sass:
     specifier: ^1.56.1
