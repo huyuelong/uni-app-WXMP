@@ -44,7 +44,7 @@ const onScrolltolower = () => {
 }
 
 // 当前下拉刷新状态
-const isTriggered = ref(false)
+const isTriggered = ref<boolean>(false)
 // 自定义下拉刷新被触发
 const onRefresherrefresh = async () => {
   // 开始动画
@@ -53,7 +53,14 @@ const onRefresherrefresh = async () => {
   // await getHomeBannerData()
   // await getHomeCategoryData()
   // await getHomeHotData()
-  await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotData()])
+  // 重置猜你喜欢组件数据
+  guessRef.value?.resetData()
+  await Promise.all([
+    getHomeBannerData(),
+    getHomeCategoryData(),
+    getHomeHotData(),
+    guessRef.value?.getMore(),
+  ])
   // 关闭动画
   isTriggered.value = false
 }
