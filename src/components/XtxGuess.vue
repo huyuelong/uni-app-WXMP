@@ -12,6 +12,11 @@ const getHomeGoodsGuessLikeData = async () => {
 
 // 组件挂载完毕
 onMounted(() => getHomeGoodsGuessLikeData())
+
+// 暴露方法
+defineExpose({
+  getMore: getHomeGoodsGuessLikeData,
+})
 </script>
 
 <template>
