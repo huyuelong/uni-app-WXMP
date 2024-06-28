@@ -64,7 +64,7 @@ const onBirthdayChange: UniHelper.DatePickerOnChange = (ev) => {
 }
 
 // 修改城市
-let fullLocationCode: [string, string, string] = ['', '', '']
+let fullLocationCode: [string | undefined, string | undefined, string | undefined] = ['', '', '']
 const onFullLocationChange: UniHelper.RegionPickerOnChange = (ev) => {
   // 修改前端页面
   profile.value.fullLocation = ev.detail.value.join(' ')
