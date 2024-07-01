@@ -100,7 +100,7 @@ const gotoPayment = () => {
     })
   }
   // 跳转到结算页
-  uni.showToast({ title: '等待完成' })
+  uni.navigateTo({ url: '/pagesOrder/create/create' })
 }
 
 // 获取屏幕边界到安全区域距离
