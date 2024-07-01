@@ -67,11 +67,11 @@ const rules: UniHelper.UniFormsRules = {
       { pattern: /^1[3-9]\d{9}$/, errorMessage: '手机号格式不正确' },
     ],
   },
-  fullLocation: {
+  countyCode: {
     rules: [{ required: true, errorMessage: '请选择所在地区' }],
   },
   address: {
-    rules: [{ required: true, errorMessage: '请输入详细地址' }],
+    rules: [{ required: true, errorMessage: '请选择详细地址' }],
   },
 }
 
@@ -81,7 +81,7 @@ const formRef = ref<UniHelper.UniFormsInstance>()
 // 提交表单
 const onSubmit = async () => {
   try {
-    await formRef.value?.validate!()
+    await formRef.value?.validate?.()
     if (query.id) {
       // 修改地址请求
       await putMemberAddressByIdAPI(query.id, form.value)
@@ -97,13 +97,14 @@ const onSubmit = async () => {
     }, 500)
   } catch (error) {
     uni.showToast({ icon: 'error', title: '请填写完整信息' })
+    console.log(error)
   }
 }
 </script>
 
 <template>
   <view class="content">
-    <uni-forms :rules="rules" :mode="form" ref="formRef">
+    <uni-forms :rules="rules" :model="form" ref="formRef">
       <!-- 表单内容 -->
       <uni-forms-item name="receiver" class="form-item">
         <text class="label">收货人</text>
