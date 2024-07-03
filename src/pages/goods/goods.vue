@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getGoodsByIdAPI } from '@/services/goods'
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onShow } from '@dcloudio/uni-app'
 import { computed, ref } from 'vue'
 import type { GoodsResult } from '@/types/goods'
 import AddressPanel from './components/AddressPanel.vue'
@@ -11,6 +11,8 @@ import type {
   SkuPopupLocaldata,
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 import { postMemberCartAPI } from '@/services/Cart'
+import type { AddressItem } from '@/types/address'
+import { getMemberAddressAPI } from '@/services/address'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -84,6 +86,20 @@ const openPopup = (name: typeof popupName.value) => {
   popup.value?.open()
 }
 
+// 获取收货地址列表数据
+const addressList = ref<AddressItem[]>([])
+const defaultAddress = ref<AddressItem | null>(null)
+const getMemberAddressData = async () => {
+  const res = await getMemberAddressAPI()
+  addressList.value = res.result
+  defaultAddress.value =
+    addressList.value.find((item) => item.isDefault === 1) || addressList.value[0]
+}
+
+onShow(() => {
+  getMemberAddressData()
+})
+
 // 是否显示SKU组件
 const isShowSku = ref(false)
 // 商品详情信息
@@ -91,10 +107,10 @@ const localdata = ref({} as SkuPopupLocaldata)
 // 按钮模式
 enum SkuMode {
   Both = 1,
-  cart = 2,
+  Cart = 2,
   Buy = 3,
 }
-const mode = ref<SkuMode>(SkuMode.Both)
+const mode = ref<SkuMode>(SkuMode.Cart)
 // 打开Sku弹窗修改按钮模式
 const openSkuPopup = (val: SkuMode) => {
   // 显示SKU组件
@@ -114,6 +130,10 @@ const onAddCart = async (ev: SkuPopupEvent) => {
   uni.showToast({ icon: 'success', title: '添加成功' })
   isShowSku.value = false
 }
+// 立即购买事件
+const onBuyNow = async (ev: SkuPopupEvent) => {
+  uni.navigateTo({ url: `/pagesOrder/create/create?skuId=${ev._id}&count=${ev.buy_num}` })
+}
 </script>
 
 <template>
@@ -131,6 +151,7 @@ const onAddCart = async (ev: SkuPopupEvent) => {
       backgroundColor: '#E9F8F5',
     }"
     @add-cart="onAddCart"
+    @buy-now="onBuyNow"
   />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
@@ -167,7 +188,13 @@ const onAddCart = async (ev: SkuPopupEvent) => {
         </view>
         <view @tap="openPopup('address')" class="item arrow">
           <text class="label">送至</text>
-          <text class="text ellipsis"> 请选择收获地址 </text>
+          <text class="text ellipsis">
+            {{
+              defaultAddress
+                ? defaultAddress?.fullLocation + ' ' + defaultAddress?.address
+                : '请选择收货地址'
+            }}
+          </text>
         </view>
         <view @tap="openPopup('service')" class="item arrow">
           <text class="label">服务</text>
@@ -235,13 +262,17 @@ const onAddCart = async (ev: SkuPopupEvent) => {
       </navigator>
     </view>
     <view class="buttons">
-      <view @tap="openSkuPopup(SkuMode.cart)" class="addcart"> 加入购物车 </view>
+      <view @tap="openSkuPopup(SkuMode.Cart)" class="addcart"> 加入购物车 </view>
       <view @tap="openSkuPopup(SkuMode.Buy)" class="buynow"> 立即购买 </view>
     </view>
   </view>
 
   <uni-popup ref="popup" type="bottom" background-color="#fff">
-    <AddressPanel v-if="popupName === 'address'" @close="popup?.close()" />
+    <AddressPanel
+      v-if="popupName === 'address'"
+      @close="popup?.close()"
+      :addresslist="addressList"
+    />
     <ServicePanel v-if="popupName === 'service'" @close="popup?.close()" />
   </uni-popup>
 </template>
