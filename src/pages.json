@@ -150,8 +150,14 @@
 				{
 					"path": "detail/detail",
 					"style": {
-            "navigationStyle": "custom",
+						"navigationStyle": "custom",
 						"navigationBarTitleText": "订单详情"
+					}
+				},
+				{
+					"path": "payment/payment",
+					"style": {
+						"navigationBarTitleText": "支付结果页"
 					}
 				}
 			]
