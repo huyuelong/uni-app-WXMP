@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onLoad } from '@dcloudio/uni-app'
-import { postLoginWxMinAPI, postLoginWxMinSimpleAPI } from '@/services/login'
+import { postLoginAPI, postLoginWxMinAPI, postLoginWxMinSimpleAPI } from '@/services/login'
 import { useMemberStore } from '@/stores'
 import type { LoginResult } from '@/types/member'
+import { ref } from 'vue'
 
+// #ifdef MP-WEIXIN
 // 获取 code 登录凭证
 let code = ''
 onLoad(async () => {
@@ -22,6 +24,7 @@ const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
   })
   loginSuccess(res.result)
 }
+// #endif
 
 // 模拟手机号码快速登录（开发练习）
 const onGetphonenumberSimple = async () => {
@@ -41,6 +44,20 @@ const loginSuccess = (profile: LoginResult) => {
     uni.navigateBack()
   }, 500)
 }
+
+// #ifdef H5
+// 传统表单登录，测试账号：13123456789 密码：123456，测试账号仅开发学习使用。
+const form = ref({
+  account: '13123456789',
+  password: '123456',
+})
+
+// 表单提交
+const onSubmit = async () => {
+  const res = await postLoginAPI(form.value)
+  loginSuccess(res.result)
+}
+// #endif
 </script>
 
 <template>
@@ -52,15 +69,19 @@ const loginSuccess = (profile: LoginResult) => {
     </view>
     <view class="login">
       <!-- 网页端表单登录 -->
-      <!-- <input class="input" type="text" placeholder="请输入用户名/手机号码" /> -->
-      <!-- <input class="input" type="text" password placeholder="请输入密码" /> -->
-      <!-- <button class="button phone">登录</button> -->
+      <!-- #ifdef H5 -->
+      <input class="input" type="text" placeholder="请输入用户名/手机号码" />
+      <input class="input" type="text" password placeholder="请输入密码" />
+      <button @tap="onSubmit" class="button phone">登录</button>
+      <!-- #endif -->
 
       <!-- 小程序端授权登录 -->
+      <!-- #ifdef MP-WEIXIN -->
       <button class="button phone" open-type="getPhoneNumber" @getphonenumber="onGetphonenumber">
         <text class="icon icon-phone"></text>
         手机号快捷登录
       </button>
+      <!-- #endif -->
       <view class="extra">
         <view class="caption">
           <text>其他登录方式</text>
